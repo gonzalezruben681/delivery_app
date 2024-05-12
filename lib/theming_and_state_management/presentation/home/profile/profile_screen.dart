@@ -17,16 +17,18 @@ class ProfileScreen extends StatelessWidget {
         apiRepositoryInterface: context.read<ApiRepositoryInterface>(),
         localRepositoryInterface: context.read<LocalRepositoryInterface>(),
       )..loadTheme(),
-      builder: (_, __) => ProfileScreen._(),
+      builder: (_, __) => const ProfileScreen._(),
     );
   }
 
   Future<void> logout(BuildContext context) async {
     final profileBloc = Provider.of<ProfileBloc>(context, listen: false);
     await profileBloc.logOut();
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => SplashScreen.init(context)),
-        (route) => false);
+    if (context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => SplashScreen.init(context)),
+          (route) => false);
+    }
   }
 
   void onThemeUpdated(BuildContext context, bool isDark) {
@@ -46,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: user?.image != null
           ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -55,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: DeliveryColors.green),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
@@ -104,10 +106,10 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Dark Mode',
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       Switch(
                                         value: profileBloc.isDark,
                                         onChanged: (val) =>
@@ -144,9 +146,8 @@ class ProfileScreen extends StatelessWidget {
                                       borderRadius:
                                           BorderRadius.circular(20)))),
                           onPressed: () => logout(context),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               'Log Out',
                               style: TextStyle(color: DeliveryColors.white),

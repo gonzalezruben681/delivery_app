@@ -27,13 +27,17 @@ class LoginScreen extends StatelessWidget {
     final bloc = context.read<LoginBloc>();
     final result = await bloc.login();
     if (result) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (_) => HomeScreen.init(context),
-      ));
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => HomeScreen.init(context),
+        ));
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Login incorrect'),
-      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Login incorrect'),
+        ));
+      }
     }
   }
 
@@ -64,7 +68,7 @@ class LoginScreen extends StatelessWidget {
                                 gradient: LinearGradient(
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
-                                  stops: [0.5, 1.0],
+                                  stops: const [0.5, 1.0],
                                   colors: deliveryGradients,
                                 ),
                                 borderRadius: BorderRadius.vertical(
@@ -96,10 +100,12 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 30),
                           Text(
                             'Login',
-                            style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 40),
@@ -107,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                             'Username',
                             textAlign: TextAlign.start,
                             style:
-                                Theme.of(context).textTheme.caption?.copyWith(
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
                                           .inputDecorationTheme
@@ -129,7 +135,7 @@ class LoginScreen extends StatelessWidget {
                           Text(
                             'Password',
                             style:
-                                Theme.of(context).textTheme.caption?.copyWith(
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
                                           .inputDecorationTheme
@@ -151,7 +157,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   )),
               Padding(
-                padding: EdgeInsets.all(25),
+                padding: const EdgeInsets.all(25),
                 child: DeliveryButton(
                   onTap: () => login(context),
                   text: 'Login',
@@ -163,7 +169,7 @@ class LoginScreen extends StatelessWidget {
               child: (bloc.loginState == LoginState.loading)
                   ? Container(
                       color: Colors.black26,
-                      child: Center(
+                      child: const Center(
                         child: CircularProgressIndicator(),
                       ),
                     )

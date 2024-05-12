@@ -1,4 +1,3 @@
-import 'package:delivery_app/theming_and_state_management/data/in_memory_products.dart';
 import 'package:delivery_app/theming_and_state_management/domain/model/product.dart';
 import 'package:delivery_app/theming_and_state_management/domain/repository/api_repository.dart';
 import 'package:delivery_app/theming_and_state_management/presentation/provider/cart_bloc.dart';
@@ -16,7 +15,7 @@ class ProductsScreen extends StatelessWidget {
       create: (_) => ProductsBloc(
         apiRepositoryInterface: context.read<ApiRepositoryInterface>(),
       )..loadProduct(),
-      builder: (_, __) => ProductsScreen._(),
+      builder: (_, __) => const ProductsScreen._(),
     );
   }
 
@@ -31,11 +30,11 @@ class ProductsScreen extends StatelessWidget {
             'Products',
             style: Theme.of(context).appBarTheme.titleTextStyle,
           ),
-          actions: []),
+          actions: const[]),
       body: productsBloc.productList.isNotEmpty
           ? GridView.builder(
-              padding: EdgeInsets.all(20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              padding: const EdgeInsets.all(20),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 2 / 3,
                   crossAxisSpacing: 10,
@@ -43,7 +42,7 @@ class ProductsScreen extends StatelessWidget {
               itemCount: productsBloc.productList.length,
               itemBuilder: (context, index) {
                 final product = productsBloc.productList[index];
-                return _itemProduct(
+                return _ItemProduct(
                   product: product,
                   onTap: () {
                     cartBloc.add(product);
@@ -58,8 +57,8 @@ class ProductsScreen extends StatelessWidget {
   }
 }
 
-class _itemProduct extends StatelessWidget {
-  const _itemProduct({Key? key, this.product, required this.onTap})
+class _ItemProduct extends StatelessWidget {
+  const _ItemProduct({Key? key, this.product, required this.onTap})
       : super(key: key);
 
   final Product? product;
@@ -98,7 +97,7 @@ class _itemProduct extends StatelessWidget {
                   product!.description,
                   style: Theme.of(context)
                       .textTheme
-                      .overline
+                      .labelSmall
                       ?.copyWith(color: DeliveryColors.lightGrey),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -114,7 +113,7 @@ class _itemProduct extends StatelessWidget {
           DeliveryButton(
             onTap: onTap,
             text: 'Add',
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 40),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 40),
           )
         ]),
       ),

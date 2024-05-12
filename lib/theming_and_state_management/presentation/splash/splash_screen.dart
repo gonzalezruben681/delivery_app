@@ -19,7 +19,7 @@ class SplashScreen extends StatefulWidget {
         apiRepositoryInterface: context.read<ApiRepositoryInterface>(),
         localRepositoryInterface: context.read<LocalRepositoryInterface>(),
       ),
-      builder: (_, __) => SplashScreen._(),
+      builder: (_, __) => const SplashScreen._(),
     );
   }
 
@@ -28,17 +28,20 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void _init() async {
-    final bloc = context.read<SplashBloc>();
-    final result = await bloc.validateSession();
-    if (result) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (_) => HomeScreen.init(context),
-      ));
-    } else {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (_) => LoginScreen.init(context),
-      ));
+ void _init() async {
+    final splashBloc = Provider.of<SplashBloc>(context, listen: false); // Get SplashBloc via Provider
+    final result = await splashBloc.validateSession();
+
+    if (mounted) { // Check if widget is still mounted
+      if (result) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => HomeScreen.init(context)),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => LoginScreen.init(context)),
+        );
+      }
     }
   }
 
@@ -76,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               'DeliveryApp',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline4?.copyWith(
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold, color: DeliveryColors.white),
             )
           ],

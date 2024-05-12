@@ -24,11 +24,11 @@ class DeliveryButton extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: padding ?? EdgeInsets.all(14.0),
+          padding: padding ?? const EdgeInsets.all(14.0),
           child: Text(
             text ?? '',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ),
       ),

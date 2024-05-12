@@ -1,3 +1,4 @@
+import 'package:delivery_app/theming_and_state_management/presentation/provider/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_app/theming_and_state_management/domain/model/product_card.dart';
@@ -6,9 +7,7 @@ import 'package:delivery_app/theming_and_state_management/presentation/widgets/d
 import 'package:delivery_app/theming_and_state_management/presentation/provider/cart_bloc.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({Key? key, required this.onShopping}) : super(key: key);
-
-  final VoidCallback onShopping;
+  const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +20,7 @@ class CartScreen extends StatelessWidget {
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
-      body: bloc.totalItems == 0
-          ? _EmptyCart(onShopping: onShopping)
-          : _FullCart(),
+      body: bloc.totalItems == 0 ? _EmptyCart() : _FullCart(),
     );
   }
 }
@@ -81,7 +78,7 @@ class _FullCart extends StatelessWidget {
                               'Sub total',
                               style: Theme.of(context)
                                   .textTheme
-                                  .caption
+                                  .bodySmall
                                   ?.copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -90,7 +87,7 @@ class _FullCart extends StatelessWidget {
                             Text('0.0 usd',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .caption
+                                    .bodySmall
                                     ?.copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -104,7 +101,7 @@ class _FullCart extends StatelessWidget {
                               'Delivery',
                               style: Theme.of(context)
                                   .textTheme
-                                  .caption
+                                  .bodySmall
                                   ?.copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -114,7 +111,7 @@ class _FullCart extends StatelessWidget {
                               'Free',
                               style: Theme.of(context)
                                   .textTheme
-                                  .caption
+                                  .bodySmall
                                   ?.copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -144,7 +141,7 @@ class _FullCart extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         DeliveryButton(
                           onTap: () {},
                           text: 'Checkout',
@@ -215,7 +212,7 @@ class _ShoppingCardProduct extends StatelessWidget {
                             product.description,
                             style: Theme.of(context)
                                 .textTheme
-                                .overline
+                                .labelSmall
                                 ?.copyWith(color: DeliveryColors.lightGrey),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -232,7 +229,7 @@ class _ShoppingCardProduct extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                       color: DeliveryColors.white,
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.remove,
                                       color: DeliveryColors.purple,
                                     ),
@@ -250,15 +247,15 @@ class _ShoppingCardProduct extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                       color: DeliveryColors.purple,
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.add,
                                       color: DeliveryColors.white,
                                     ),
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Text('\$ ${product.price}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: DeliveryColors.green,
                                     )),
                               ],
@@ -274,7 +271,7 @@ class _ShoppingCardProduct extends StatelessWidget {
             right: 0,
             child: InkWell(
               onTap: onDelete,
-              child: CircleAvatar(
+              child: const CircleAvatar(
                 backgroundColor: DeliveryColors.pink,
                 child: Icon(Icons.delete_outlined),
               ),
@@ -287,9 +284,9 @@ class _ShoppingCardProduct extends StatelessWidget {
 }
 
 class _EmptyCart extends StatelessWidget {
-  const _EmptyCart({Key? key, required this.onShopping}) : super(key: key);
-
-  final VoidCallback onShopping;
+  const _EmptyCart({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -317,9 +314,12 @@ class _EmptyCart extends StatelessWidget {
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)))),
-            onPressed: onShopping,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            onPressed: () {
+              final homeBloc = context.read<HomeBloc>();
+              homeBloc.updateIndexSelected(0);
+            },
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 'Go shopping',
                 style: TextStyle(color: DeliveryColors.white),

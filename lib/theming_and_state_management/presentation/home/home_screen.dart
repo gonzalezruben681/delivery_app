@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
             apiRepositoryInterface: context.read<ApiRepositoryInterface>(),
             localRepositoryInterface: context.read<LocalRepositoryInterface>(),
           )..loadUser(),
-          builder: (_, __) => HomeScreen._(),
+          builder: (_, __) => const HomeScreen._(),
         ),
       ],
     );
@@ -36,18 +36,14 @@ class HomeScreen extends StatelessWidget {
           child: IndexedStack(index: bloc.indexSelected, children: [
             ProductsScreen.init(context),
             const Placeholder(),
-            CartScreen(onShopping: () {
-              bloc.updateIndexSelected(0);
-            }),
+            const CartScreen(),
             const Placeholder(),
             ProfileScreen.init(context),
           ]),
         ),
         _DeliveryNavigationBar(
-            index: bloc.indexSelected,
-            onIndexSelected: (index) {
-              bloc.updateIndexSelected(index);
-            }),
+          index: bloc.indexSelected,
+        ),
       ]),
     );
   }
@@ -55,12 +51,10 @@ class HomeScreen extends StatelessWidget {
 
 class _DeliveryNavigationBar extends StatelessWidget {
   final int? index;
-  final ValueChanged<int> onIndexSelected;
 
   const _DeliveryNavigationBar({
     Key? key,
     this.index,
-    required this.onIndexSelected,
   }) : super(key: key);
 
   @override
@@ -69,13 +63,13 @@ class _DeliveryNavigationBar extends StatelessWidget {
     final cartBloc = Provider.of<CartBloc>(context);
     final user = bloc.user;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(20.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             color: Theme.of(context).canvasColor,
             border: Border.all(
-              color: Theme.of(context).bottomAppBarColor,
+              color: Theme.of(context).bottomAppBarTheme.color!,
               width: 2,
             )),
         child: Padding(
@@ -83,59 +77,71 @@ class _DeliveryNavigationBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Material(
-                child: IconButton(
-                  onPressed: () => onIndexSelected(0),
-                  icon: Icon(Icons.home),
-                  color: index == 0
-                      ? DeliveryColors.green
-                      : DeliveryColors.lightGrey,
-                ),
-              ),
-              Material(
-                child: IconButton(
-                  onPressed: () => onIndexSelected(1),
-                  icon: Icon(Icons.store),
-                  color: index == 1
-                      ? DeliveryColors.green
-                      : DeliveryColors.lightGrey,
-                ),
-              ),
-              Material(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: DeliveryColors.purple,
-                      radius: 23,
-                      child: IconButton(
-                          color: index == 2
-                              ? DeliveryColors.green
-                              : DeliveryColors.white,
-                          onPressed: () => onIndexSelected(2),
-                          icon: Icon(Icons.shopping_basket)),
-                    ),
-                    cartBloc.totalItems == 0
-                        ? const SizedBox.shrink()
-                        : Positioned(
-                            right: 0,
-                            child: CircleAvatar(
-                              radius: 10,
-                              backgroundColor: Colors.pinkAccent,
-                              child: Text(cartBloc.totalItems.toString()),
-                            ))
-                  ],
-                ),
-              ),
-              Material(
-                child: IconButton(
-                    color: index == 3
+              Expanded(
+                child: Material(
+                  child: IconButton(
+                    onPressed: () => bloc.updateIndexSelected(0),
+                    icon: const Icon(Icons.home),
+                    color: index == 0
                         ? DeliveryColors.green
                         : DeliveryColors.lightGrey,
-                    onPressed: () => onIndexSelected(3),
-                    icon: Icon(Icons.favorite_border)),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Material(
+                  child: IconButton(
+                    onPressed: () => bloc.updateIndexSelected(1),
+                    icon: const Icon(Icons.store),
+                    color: index == 1
+                        ? DeliveryColors.green
+                        : DeliveryColors.lightGrey,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Material(
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: DeliveryColors.purple,
+                          radius: 23,
+                          child: IconButton(
+                              color: index == 2
+                                  ? DeliveryColors.green
+                                  : DeliveryColors.white,
+                              onPressed: () => bloc.updateIndexSelected(2),
+                              icon: const Icon(Icons.shopping_basket)),
+                        ),
+                        cartBloc.totalItems == 0
+                            ? const SizedBox.shrink()
+                            : Positioned(
+                                right: 0,
+                                child: Center(
+                                  child: CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: Colors.pinkAccent,
+                                    child: Text(cartBloc.totalItems.toString()),
+                                  ),
+                                ))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Material(
+                  child: IconButton(
+                      color: index == 3
+                          ? DeliveryColors.green
+                          : DeliveryColors.lightGrey,
+                      onPressed: () => bloc.updateIndexSelected(3),
+                      icon: const Icon(Icons.favorite_border)),
+                ),
               ),
               InkWell(
-                  onTap: () => onIndexSelected(4),
+                  onTap: () => bloc.updateIndexSelected(4),
                   child: user?.image == null
                       ? const SizedBox.shrink()
                       : CircleAvatar(
